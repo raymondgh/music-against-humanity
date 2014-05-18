@@ -1,17 +1,38 @@
 var clientId = "43ffka3tjsw8au4qt9b2abm2"
 	baseAPIUrl = "https://partner.api.beatsmusic.com/v1",
-	playlist = [
-		"pl181970440342732800"
+	playlists = [
+		{ id: "pl181970440342732800", label: 'Driving', owner: 'Tan' },
+		{ id: "pl181970515685015808", label: 'Running', owner: ''},
+		{ id: "pl182109085187964928", label: 'Afternoon Stroll', owner: 'Ray'},
+		{ id: 'pl182107962964180992', label: 'Dance', owner: 'Sasi'}
+
 	],
 	player = null,
-	accessToken = null;
+	accessToken = null,
+	previewPlaytime = 20,
+	pauseCallback = null;
 
 BeatsService = {
-
 	initPlayer : function () {
 		player = new BeatsAudioManager("myBeatsPlayer");
 		player.on("ready", this.handleReady);
 		player.on("error", this.handleError);
+		player.on("timeupdate", function () {
+    		if (player.currentTime < 60) {
+    			player.currentTime = 60;
+			}
+			if (player.currentTime > 60 + previewPlaytime) {
+				if (!player.paused) {
+					player.pause();
+					if (pauseCallback) {
+						pauseCallback();
+						pauseCallback = null;
+					}
+				}
+
+			}
+				
+    	});
 	},
 
 	getPlayer : function () { return player; },
@@ -28,28 +49,86 @@ BeatsService = {
     playSongFromStart : function () {
     	player.load();
     },
-    loadSong : function (trackId) {
-    	player.stop();
+    playPreview : function (trackId, callback) {
+    	
+    	pauseCallback = callback;
+
     	player.identifier = trackId;
-    },
-    loadAndPlay : function (trackId) {
-    	this.loadSong(trackId);
     	player.load();
     },
+    loadSong : function (trackId) {
+    	player.stop();
+    	player.load(trackId, false);
+
+    },
+    loadAndPlay : function (trackId) {
+    	player.stop();
+    	player.load(trackId, true);
+
+    },
     handleError : function () {},
-	getPlaylist : function (playlistId, callback, user) {
+    fetchAllPlaylist: function (callback) {
+    	var ids = [], j = 0, i;
+    	for (i = 0; i < playlists.length; i++) {
+    		var playlist = playlists[i];
+    		$.ajax({
+    			url: baseAPIUrl + '/api/playlists/' + playlist.id + "?client_id=43ffka3tjsw8au4qt9b2abm2&access_token=" + accessToken,
+				success: function (res) {
+					
+					if (res.data) {
+						if (res.data.refs) {
+							for (var k = 0; k < res.data.refs.tracks.length; k++) {
+								ids.push({ id: res.data.refs.tracks[k].id, title: res.data.refs.tracks[k].id, playlistName: res.data.name} );
+							}
+						}
+					}
+
+					if (j === playlists.length - 1) {
+						callback(ids);
+					}
+					j++;
+				},
+				error: function () { callback(null) },
+				ajax: false
+			});
+    	}
+    	
+    },
+
+    shufflePlaylist: function (array) {
+    	var currentIndex = array.length
+	    , temporaryValue
+	    , randomIndex;
+
+	  // While there remain elements to shuffle...
+	  while (0 !== currentIndex) {
+
+	    // Pick a remaining element...
+	    randomIndex = Math.floor(Math.random() * currentIndex);
+	    currentIndex -= 1;
+
+	    // And swap it with the current element.
+	    temporaryValue = array[currentIndex];
+	    array[currentIndex] = array[randomIndex];
+	    array[randomIndex] = temporaryValue;
+	  }
+
+	  return array;
+    },
+
+	getPlaylist : function (playlistId, callback, playlistName) {
 		$.ajax(baseAPIUrl + '/api/playlists/' + playlistId + "?client_id=43ffka3tjsw8au4qt9b2abm2&access_token=" + accessToken)
 		.done(function (res) {
 			var ids = [];
 			if (res.data) {
 				if (res.data.refs) {
 					for (var i = 0; i < res.data.refs.tracks.length; i++) {
-						ids.push(res.data.refs.tracks[i].id);
+						ids.push({ id: res.data.refs.tracks[i].id, title: res.data.refs.tracks[i].id});
 					}
 				}
 			}
 
-			callback(ids, user);
+			callback(ids, playlistName);
 		})
 		.fail(function () { callback(null) });
 	},
