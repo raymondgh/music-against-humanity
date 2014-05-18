@@ -21,10 +21,14 @@
 			console.log(answer);
 			submitAnswer('Sasi', answer);  	
 			$("#answer").text(answer);
+			endRound();
+			var winRef = new Firebase('https://mah.firebaseio.com/rounds/'+playing+'/winners');
+			winRef.once('value', function(snapshot) { 
+				// if ( $.inArray(answer, snapshot.val()) ) {
+					$('.image-playing').attr("src", "Tan.png");
+				// }
+			});
 		});
-
-
-
 	});
 
 
@@ -82,7 +86,8 @@
 
 				} else if ( status == 'end' ) {
 					console.log("Call Start Round");
-					startRound();
+					// startRound();
+					if ( )
 				} else if ( status == 'over' ) {
 					console.log("Display final result");
 				}
