@@ -14,11 +14,28 @@
 	 */
 	function createGame(creator) {
 		var hostRef = new Firebase('https://mah.firebaseio.com/host');
-		hostRef.set('sasi');
+		hostRef.set(creator);
 		var statusRef = new Firebase('https://mah.firebaseio.com/status');
 		statusRef.set('waiting');
 		var statusRef = new Firebase('https://mah.firebaseio.com/playing');
 		statusRef.set(-1);
+		var roundsRef = new Firebase('https://mah.firebaseio.com/rounds');
+
+		statusRef.once('value', function(snapshot) {
+			var roundCount = snapshot.val() ;
+			console.log(roundCount);
+			roundCount++;
+			if ( roundCount >= 0 ) {
+				var round = {};
+				// round[roundCount] = {"active": true};
+				round[roundCount] = {"active": true};
+
+				console.log("round is " + round);
+				roundsRef.set(round);	
+				statusRef.set(roundCount);
+
+			} 
+		});
 	}
 
 	function joinGame(name) {
@@ -69,9 +86,8 @@
 
 	function startGame() {
 		// set status to started
-		var roundsRef = new Firebase('https://mah.firebaseio.com/rounds');
 		var playingRef = new Firebase('https://mah.firebaseio.com/playing');
-
+		playingRef.set(-1);
 		// console.log(playingRef.val());
 		// if ( typeof roundsRef.val() === "undefined" ) {
 		// 	var round = {};
