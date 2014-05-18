@@ -1,22 +1,85 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-		<title>Music against Humanity</title>
-		<!-- Lightbox implementation -->
-		<script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script>
-		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-		<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-		<script type="text/javascript" src="bam.min.js"></script>
-		<script type="text/javascript" src='beats.js'></script>
-		<script type='text/javascript' src='mah.js'></script>
+<head>
+    <meta charset="utf-8">
+    <title>mah</title>
 
-	</head>
-	<body>
-		<input type='text' id='nameInput' placeholder='Creator'><br/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="mah">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <script type='text/javascript' src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="assets/images/icons/apple-touch-icon-152x152-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="assets/images/icons/apple-touch-icon-120x120-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="assets/images/icons/apple-touch-icon-76x76-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="assets/images/icons/apple-touch-icon-57x57-precomposed.png">
+    <link rel="shortcut icon" href="assets/images/icons/apple-touch-icon.png">
+    <link rel="shortcut icon" sizes="1024x1024" href="assets/images/icons/icon-1024x1024.png">
+    <link rel="shortcut icon" sizes="128x128" href="assets/images/icons/icon-128x128.png">
+    
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
 
-	    <input type='text' id='playerInput' placeholder='Player Name'>
-        <input type='text' id='playerImgInput' placeholder='Player IMG URL'><br />
-        <button type='text' id='getAuthKey' text='Get Key'>Get Key</button>
-	</body>
+    <script type="text/javascript" src="mah.js"></script>
+
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: white;
+            color: #333333;
+        }
+    </style>
+    <link rel="stylesheet" href="mah.css">
+
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "prototype": "montage/ui/loader.reel"
+        }
+    }
+    </script>
+</head>
+<body>
+    <span class="loading"></span>
+    <div class="header">
+    	Music Against Humanity
+    </div>
+    <div class="image-playing">
+    	<img class="image-playing" src="logo.png"/>
+    	<div id="answer">
+    		Guess the song picker!
+    	</div>
+	</div>
+	<div class="picker">
+		<div class="choice">
+			<img class="image-picker" src="logo.png" id="picker-Sasi"/>
+			<div class="image-picker-name">
+				Sasi
+			</div>
+		</div>
+		<div class="choice"> 
+			<img class="image-picker" src="logo.png" id="picker-Tan"/>
+			<div class="image-picker-name">
+				Tan
+			</div>
+		</div>
+		<div class="choice">
+			<img class="image-picker" src="logo.png" id="picker-Ray"/>
+			<div class="image-picker-name">
+				Ray
+			</div>
+		</div>
+		<div class="choice">
+			<img class="image-picker" src="logo.png" id="picker-Michel"/>
+			<div class="image-picker-name">
+				Michel
+			</div>
+		</div>
+		</button>
+	</div>
+</body>
 </html>
