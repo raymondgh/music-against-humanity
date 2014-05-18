@@ -2,8 +2,8 @@ var clientId = "43ffka3tjsw8au4qt9b2abm2"
 	baseAPIUrl = "https://partner.api.beatsmusic.com/v1",
 	playlists = [
 		{ id: "pl181970440342732800", label: 'Driving', owner: 'Tan' },
-		{ id: "pl181970515685015808", label: 'Running', owner: ''},
-		{ id: "pl182109085187964928", label: 'Afternoon Stroll', owner: 'Ray'},
+		{ id: "pl181970515685015808", label: 'Running', owner: 'Ray'},
+		{ id: "pl182109085187964928", label: 'Afternoon Stroll', owner: 'Michel'},
 		{ id: 'pl182107962964180992', label: 'Dance', owner: 'Sasi'}
 
 	],
@@ -78,7 +78,13 @@ BeatsService = {
 					if (res.data) {
 						if (res.data.refs) {
 							for (var k = 0; k < res.data.refs.tracks.length; k++) {
-								ids.push({ id: res.data.refs.tracks[k].id, title: res.data.refs.tracks[k].id, playlistName: res.data.name} );
+								var owner = '';
+								for (var l = 0; l < playlists.length; l++) {
+									if(playlists[l].id === res.data.id) {
+										owner = playlists[l].owner;
+									}
+								}
+								ids.push({ id: res.data.refs.tracks[k].id, title: res.data.refs.tracks[k].id, owner: owner } );
 							}
 						}
 					}
