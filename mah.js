@@ -22,7 +22,7 @@
 			submitAnswer('Sasi', answer);  	
 			$("#answer").text(answer);
 			endRound();
-			var winRef = new Firebase('https://mah.firebaseio.com/rounds/'+playing+'/winners');
+			var winRef = new Firebase('https://mah.firebaseio.com/rounds/0/winners');
 			winRef.once('value', function(snapshot) { 
 				// if ( $.inArray(answer, snapshot.val()) ) {
 					$('.image-playing').attr("src", "Tan.png");
