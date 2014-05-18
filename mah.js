@@ -121,4 +121,9 @@
 		globalPlaylist = BeatsService.shufflePlaylist(globalPlaylist);
 	}
 
+	function getToken(callback) {
+		oAuthCallback = callback;
+		BeatsService.getAccessToken();
+	}
+
 	

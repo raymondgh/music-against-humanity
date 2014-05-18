@@ -10,7 +10,10 @@ var clientId = "43ffka3tjsw8au4qt9b2abm2"
 	player = null,
 	accessToken = null,
 	previewPlaytime = 8,
-	pauseCallback = null;
+	endRound = null,
+	oAuthCallback = function () {
+
+	};
 
 BeatsService = {
 	initPlayer : function () {
@@ -34,8 +37,8 @@ BeatsService = {
 					    	break;
 					    }
 					}
-					if (pauseCallback) {
-						pauseCallback();
+					if (endRound) {
+						endRound();
 					}
 				}
 
@@ -171,7 +174,7 @@ BeatsService = {
 		console.log(token);
 		this.initPlayer();
 		accessToken = token;
-        
+        oAuthCallback();
 	},
 	sendImplicitAccessToken : function (params, errorCallback, successCallback) {
 	    if(params.access_token){
