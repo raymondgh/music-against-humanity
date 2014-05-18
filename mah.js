@@ -156,5 +156,10 @@
 		var statusRef = new Firebase('https://mah.firebaseio.com/status');
 		statusRef.set('end');
 	}
+	
+	function getToken(callback) {
+		oAuthCallback = callback;
+		BeatsService.getAccessToken();
+	}
 
 	
