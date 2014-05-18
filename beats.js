@@ -9,7 +9,7 @@ var clientId = "43ffka3tjsw8au4qt9b2abm2"
 	],
 	player = null,
 	accessToken = null,
-	previewPlaytime = 20,
+	previewPlaytime = 8,
 	pauseCallback = null;
 
 BeatsService = {
@@ -18,15 +18,24 @@ BeatsService = {
 		player.on("ready", this.handleReady);
 		player.on("error", this.handleError);
 		player.on("timeupdate", function () {
+			if (player.paused) {
+				return;
+			}
     		if (player.currentTime < 60) {
     			player.currentTime = 60;
 			}
 			if (player.currentTime > 60 + previewPlaytime) {
 				if (!player.paused) {
 					player.pause();
+					var start = new Date().getTime(),
+						milliseconds = 500;
+					for (var i = 0; i < 1e7; i++) {
+					    if ((new Date().getTime() - start) > milliseconds){
+					    	break;
+					    }
+					}
 					if (pauseCallback) {
 						pauseCallback();
-						pauseCallback = null;
 					}
 				}
 
@@ -49,10 +58,8 @@ BeatsService = {
     playSongFromStart : function () {
     	player.load();
     },
-    playPreview : function (trackId, callback) {
+    playPreview : function (trackId) {
     	
-    	pauseCallback = callback;
-
     	player.identifier = trackId;
     	player.load();
     },
