@@ -8,55 +8,33 @@
 
 	    // startRound();
 	});
-	/**
-	 * creator - owner string name
-	 * example - "Ray"
-	 */
+
+	function init() {
+		var playingRef = new Firebase('https://mah.firebaseio.com/playing');
+		playingRef.set(-1);
+		var roundsRef = new Firebase('https://mah.firebaseio.com/rounds');
+		roundsRef.remove();
+		var playlistRef = new Firebase('https://mah.firebaseio.com/playlist');
+		playlistRef.remove();
+		var hostRef = new Firebase('https://mah.firebaseio.com/host');
+		hostRef.remove();
+		var statusRef = new Firebase('https://mah.firebaseio.com/status');
+		statusRef.remove();
+
+		createPlayers();
+	}
+	
 	function createGame(creator) {
 		var hostRef = new Firebase('https://mah.firebaseio.com/host');
 		hostRef.set(creator);
 		var statusRef = new Firebase('https://mah.firebaseio.com/status');
-		statusRef.set('waiting');
-		var statusRef = new Firebase('https://mah.firebaseio.com/playing');
-		statusRef.set(-1);
-		var roundsRef = new Firebase('https://mah.firebaseio.com/rounds');
-
-		statusRef.once('value', function(snapshot) {
-			var roundCount = snapshot.val() ;
-			console.log(roundCount);
-			roundCount++;
-			if ( roundCount >= 0 ) {
-				var round = {};
-				// round[roundCount] = {"active": true};
-				round[roundCount] = {"active": true};
-
-				console.log("round is " + round);
-				roundsRef.set(round);	
-				statusRef.set(roundCount);
-
-			} 
-		});
+		statusRef.set('start');
+		
 	}
 
 	function joinGame(name) {
-
-	}
-	/**
-	 * add songs to PlayList and add player to Player
-	 * 
-	 * 		songs : [
-	 * 			{
-	 *				owner : "Ray",
-	 *	 			musicURL : "someUrl",
-	 *	 			coverImgURL : "someUrl"
-	 *	 		},...{}
-	 *		]
-	 * }
-	 */
-	function joinGame(playerName, songs) {
-		// TODO add playname into song object
-		// var playlistRef = new Firebase('https://mah.firebaseio.com/PlayList');
-		// playListRef.push(songs);
+		var statusRef = new Firebase('https://mah.firebaseio.com/players/'+name+'/status');
+		statusRef.set('active');	
 
 	}
 
@@ -84,83 +62,11 @@
 		return playersRef;
 	}
 
-	function startGame() {
-		// set status to started
-		var playingRef = new Firebase('https://mah.firebaseio.com/playing');
-		playingRef.set(-1);
-		// console.log(playingRef.val());
-		// if ( typeof roundsRef.val() === "undefined" ) {
-		// 	var round = {};
-		// 	round[0] = {"active": true};
-		// 	console.log("round is " + round);
-		// 	roundsRef.set(round);
-		// } else {
-		// 	var rounds = roundsRef.val();
-		// 	console.log(rounds.length);
-		// 	rounds.push({"active":true});
-		// 	roundsRef.set(rounds);
-		// }
-		// var obj = roundsRef.child('0');
-		// console.log(obj);
-
-		// console.log(obj.va);
-		// if ( typeof obj.va === "undefined" ) {
-		// 	var round = {};
-		// 	round[0] = {"active": true};
-		// 	console.log(round);
-		// 	roundsRef.set(round);
-		// } else {
-		// 	console.log("hi");
-		// }
-		// console.log(roundsRef.child());
-		roundsRef.on('value', function(snapshot) {
-			// var obj = snapshot.val();
-			// var round = {};
-
-			// if ( typeof obj === "undefined" ) {
-			// 	round[0] = "";
-			// 	// round[0] = {"active": true};
-			// } else {
-			// 	round[obj.size] = "";
-			// }
-			// console.log(round);
-			// roundsRef.push(round);
-
-			// if ( snapshot.val() === null ) {
-			// 	var round = {};
-			// 	round[0] = {"active": true};
-			// 	console.log("round is " + round);
-			// 	roundsRef.set(round);
-			// } else {
-			// 	var rounds = snapshot.val();
-			// 	console.log(rounds.length);
-			// 	rounds.push({"active":true});
-			// 	roundsRef.set(rounds);
-			// }
-		});
-
-	}
 
 	function startRound() {
-		var roundsRef = new Firebase('https://mah.firebaseio.com/rounds');
-		var roundCount = 0;
-		roundsRef.on('value', function(snapshot) {
-			snapshot.val();
+		var statusRef = new Firebase('https://mah.firebaseio.com/players/'+name+'/status');
+		statusRef.set('ready');	
 
-		});
-
-		var baseRef = new Firebase('https://mah.firebaseio.com/');
-		baseRef.on('value', function(snapshot) {
-		  	// alert('Status: ' + snapshot.val());
-		  	var obj = snapshot.val();
-
-			if ( obj.status == "started" ) {
-				// update 'playing'
-				// 
-				// pick next song, update
-			}
-		});
-		// if ( statusRef )
 	}
 
 	function submitAnswer(player, answer) {
