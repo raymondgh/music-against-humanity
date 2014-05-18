@@ -1,3 +1,4 @@
+	var globalPlaylist = null;
 	$(document).ready(function(){
 		$('#nameInput').keypress(function (e) {
 	        if (e.keyCode == 13) {
@@ -6,6 +7,9 @@
 	        }
 	    });
 
+		$('#getAuthKey').click(function (e){
+	    	BeatsService.getAccessToken();
+	    });
 	    // startRound();
 	});
 
@@ -110,6 +114,11 @@
 	function submitAnswer(player, answer) {
 
 
+	}
+
+	function getPlaylist() {
+		BeatsService.fetchAllPlaylist(function (data) { globalPlaylist = data; });
+		globalPlaylist = BeatsService.shufflePlaylist(globalPlaylist);
 	}
 
 	
