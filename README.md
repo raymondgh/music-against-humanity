@@ -1,5 +1,5 @@
 music-against-humanity
 ======================
 
-THE Social Music Party Game
+THE Social Music Party Game!
 :-)
