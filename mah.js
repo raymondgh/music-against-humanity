@@ -9,34 +9,6 @@
 	    // startRound();
 	});
 
-	function init() {
-		var playingRef = new Firebase('https://mah.firebaseio.com/playing');
-		playingRef.set(-1);
-		var roundsRef = new Firebase('https://mah.firebaseio.com/rounds');
-		roundsRef.remove();
-		var playlistRef = new Firebase('https://mah.firebaseio.com/playlist');
-		playlistRef.remove();
-		var hostRef = new Firebase('https://mah.firebaseio.com/host');
-		hostRef.remove();
-		var statusRef = new Firebase('https://mah.firebaseio.com/status');
-		statusRef.remove();
-
-		createPlayers();
-	}
-	
-	function createGame(creator) {
-		var hostRef = new Firebase('https://mah.firebaseio.com/host');
-		hostRef.set(creator);
-		var statusRef = new Firebase('https://mah.firebaseio.com/status');
-		statusRef.set('start');
-		
-	}
-
-	function joinGame(name) {
-		var statusRef = new Firebase('https://mah.firebaseio.com/players/'+name+'/status');
-		statusRef.set('active');	
-
-	}
 
 	function createPlayers() {
 		var players = {};
@@ -63,9 +35,75 @@
 	}
 
 
+	function init() {
+		var playingRef = new Firebase('https://mah.firebaseio.com/playing');
+		playingRef.set(-1);
+		var roundsRef = new Firebase('https://mah.firebaseio.com/rounds');
+		roundsRef.remove();
+		var playlistRef = new Firebase('https://mah.firebaseio.com/playlist');
+		playlistRef.remove();
+		var hostRef = new Firebase('https://mah.firebaseio.com/host');
+		hostRef.remove();
+		var statusRef = new Firebase('https://mah.firebaseio.com/status');
+		statusRef.remove();
+
+		createPlayers();
+
+		playingRef.on('value', function(snapshot) { 
+			var playing = snapshot.val();
+			var statusRef = new Firebase('https://mah.firebaseio.com/status');
+			statusRef.once('value', function(statusSnap) {
+				var status = statusSnap.val();
+				if ( status == 'ready' ) {
+					console.log("Push default guesses to Round");
+
+				} else if ( status == 'end' ) {
+					console.log("Call Start Round");
+					startRound();
+				} else if ( status == 'over' ) {
+					console.log("Display final result");
+				}
+			});
+
+
+		});
+	}
+	
+	function createGame(creator) {
+		var hostRef = new Firebase('https://mah.firebaseio.com/host');
+		hostRef.set(creator);
+		var statusRef = new Firebase('https://mah.firebaseio.com/status');
+		statusRef.set('start');
+		joinGame(creator);
+		
+	}
+
+	function joinGame(name) {
+		var pStatusRef = new Firebase('https://mah.firebaseio.com/players/'+name+'/status');
+		pStatusRef.set('active');	
+
+	}
+
+
 	function startRound() {
-		var statusRef = new Firebase('https://mah.firebaseio.com/players/'+name+'/status');
-		statusRef.set('ready');	
+		var statusRef = new Firebase('https://mah.firebaseio.com/status');
+		statusRef.set('ready');
+		var playingRef = new Firebase('https://mah.firebaseio.com/playing');
+		playingRef.once('value', function(snapshot) { 
+			var playing = snapshot.val();
+			playing++;
+			console.log("Playing " + playing);
+			playingRef.set(playing);
+			if ( playing == 2 ) {
+				statusRef.set('over');	
+			}
+		});
+	}
+
+	function submitDefaultAnswer() {
+		var guesses = {};
+		guesses.push({'Ray': 'Ray'});
+		var roundsRef = new Firebase('https://mah.firebaseio.com/rounds');
 
 	}
 
