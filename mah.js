@@ -87,7 +87,6 @@
 				} else if ( status == 'end' ) {
 					console.log("Call Start Round");
 					// startRound();
-					if ( )
 				} else if ( status == 'over' ) {
 					console.log("Display final result");
 				}
