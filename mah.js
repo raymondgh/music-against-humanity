@@ -60,6 +60,7 @@
 				var status = statusSnap.val();
 				if ( status == 'ready' ) {
 					console.log("Push default guesses to Round");
+					submitDefaultAnswer(playing);
 
 				} else if ( status == 'end' ) {
 					console.log("Call Start Round");
@@ -105,20 +106,55 @@
 	}
 
 	function submitDefaultAnswer() {
-		var guesses = {};
-		guesses.push({'Ray': 'Ray'});
-		var roundsRef = new Firebase('https://mah.firebaseio.com/rounds');
+		var guesses = [];
+		guesses['Ray'] = 'Ray';
+		guesses['Tan'] = 'Tan';
+		guesses['Sasi'] = 'Sasi';
+		guesses['Michel'] = 'Michel';
 
+		var roundsRef = new Firebase('https://mah.firebaseio.com/rounds');
+		var rounds = [];
+		roundsRef.once('value', function(snapshot) {
+			rounds = snapshot.val();
+			if ( rounds === null ) {
+				rounds = [];
+			}
+
+			var round = {};
+			round = {'guesses': guesses};
+			rounds.push(round);
+			console.log("total rounds : " + rounds);
+			roundsRef.set(rounds);
+
+		});
+		
 	}
 
 	function submitAnswer(player, answer) {
+		var statusRef = new Firebase('https://mah.firebaseio.com/status');
+		var playingRef = new Firebase('https://mah.firebaseio.com/playing');
 
-
+		statusRef.once('value', function(sSnapshot) {
+			var status = sSnapshot.val();
+			if ( status == 'ready' ) {
+				playingRef.once('value', function(pSnapshot) {
+					var playing = pSnapshot.val();
+					var roundsRef = new Firebase('https://mah.firebaseio.com/rounds/'+playing+'/guesses/'+player);
+				
+					roundsRef.set(answer) ;
+				});
+			}
+		});
 	}
 
 	function getPlaylist() {
 		BeatsService.fetchAllPlaylist(function (data) { globalPlaylist = data; });
 		globalPlaylist = BeatsService.shufflePlaylist(globalPlaylist);
+	}
+
+	function endRound() {
+		var statusRef = new Firebase('https://mah.firebaseio.com/status');
+		statusRef.set('end');
 	}
 
 	
